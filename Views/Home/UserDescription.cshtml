@@ -1,0 +1,16 @@
+﻿@model Dictionary<string,string>
+
+@{
+    ViewData["Title"] = "User Information";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Currently we can get the following information of the logged in user:</p>
+
+<dl>
+@foreach (var keyValuePair in @Model)
+{
+    <dt>@keyValuePair.Key</dt>
+    <dd>@keyValuePair.Value</dd>
+}
+</dl>

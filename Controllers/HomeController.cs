@@ -25,6 +25,16 @@ namespace WebApp_OpenIDConnect_DotNet.Controllers
             return View();
         }
 
+        public IActionResult UserDescription()
+        {
+            var userInformationByName = new Dictionary<string, string>()
+            {
+                {"key1", "value1"},
+                {"key2", "value2"}
+            };
+            return View(userInformationByName);
+        }
+        
         public IActionResult Privacy()
         {
             return View();

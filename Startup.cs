@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Graph;
 using Microsoft.IdentityModel.Logging;
 
 namespace WebApp_OpenIDConnect_DotNet
@@ -31,8 +32,16 @@ namespace WebApp_OpenIDConnect_DotNet
         // <Configure_service_ref_for_docs_ms>
         public void ConfigureServices(IServiceCollection services)
         {
+            var downstreamApiConfig = Configuration.GetSection("DownstreamApi");
+            var initialScopes = downstreamApiConfig
+                .GetValue<string>("Scopes")
+                .Split(' ');
+
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"))
+                .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
+                .AddMicrosoftGraph(downstreamApiConfig)
+                .AddInMemoryTokenCaches();
 
             services.AddControllersWithViews(options =>
             {
@@ -43,6 +52,7 @@ namespace WebApp_OpenIDConnect_DotNet
             });
            services.AddRazorPages()
                 .AddMicrosoftIdentityUI();
+
         }
         // </ Configure_service_ref_for_docs_ms >
 
